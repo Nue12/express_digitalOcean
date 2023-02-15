@@ -9,6 +9,8 @@ const fetchData = async () => {
   }
 };
 
+fetchData();
+
 const imgParentTag = document.querySelector(".imgParent");
 
 const uploadFiles = async () => {
