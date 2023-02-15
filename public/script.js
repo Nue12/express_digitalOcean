@@ -1,9 +1,20 @@
+const API = localStorage.getItem("apiUrl");
+const fetchData = async () => {
+  if (API) {
+    const response = await fetch(`${API}`);
+    const data = await response.json();
+    console.log(data);
+  } else {
+    window.location.href = "/api";
+  }
+};
+
 const imgParentTag = document.querySelector(".imgParent");
 
 const uploadFiles = async () => {
   const fileForm = document.getElementById("fileForm");
   const formData = new FormData(fileForm);
-  const response = await fetch("/upload", {
+  const response = await fetch(`${API}/upload`, {
     method: "POST",
     body: formData,
   });

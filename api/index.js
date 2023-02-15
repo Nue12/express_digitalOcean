@@ -5,10 +5,34 @@ const fs = require("fs");
 const multerS3 = require("multer-s3-v2");
 const formidable = require("formidable");
 const { v4: uuidv4 } = require("uuid");
+const dotenv = require("dotenv");
+const app = express();
+app.use(express.static("public"));
 
+dotenv.config();
+const apiUrl = process.env.API_URL;
 const spacesEndpoint = new aws.Endpoint("sgp1.digitaloceanspaces.com");
 const s3 = new aws.S3({
   endpoint: spacesEndpoint,
+  accessKeyId: process.env.SPACES_ACCESS_KEY,
+  secretAccessKey: process.env.SPACES_SECRET_KEY,
+});
+
+const html = `
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <script type="text/javascript">
+        localStorage.setItem('apiUrl', '${apiUrl}')
+        window.location.href = "/"
+    </script>
+  </body>
+</html>
+`;
+
+app.get("/api", (req, res) => {
+  res.send(html);
 });
 
 // function uploadToS3(file, destFileName, callback) {
@@ -29,23 +53,12 @@ const s3 = new aws.S3({
 //   s3.upload(uploadParams, callback);
 // }
 
-const app = express();
-app.use(express.static("public"));
-
 // Main, error and success views
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + "/public/index.html");
-});
+// app.get("/", function (request, response) {
+//   response.sendFile(__dirname + "/public/index.html");
+// });
 
-app.get("/success", function (request, response) {
-  response.sendFile(__dirname + "/public/success.html");
-});
-
-app.get("/error", function (request, response) {
-  response.sendFile(__dirname + "/public/error.html");
-});
-
-app.post("/upload", function (req, res, next) {
+app.post("/api/upload", function (req, res, next) {
   // formidable
   const form = formidable({ multiples: true });
   form.parse(req, (err, fields, files) => {
@@ -64,7 +77,7 @@ app.post("/upload", function (req, res, next) {
       (err, data) => {
         if (err) {
           console.log(err);
-          return res.redirect("/error");
+          return res.send({ err: err });
         } else if (data) {
           // console.log("File uploaded successfully.", data);
           console.log(data);
