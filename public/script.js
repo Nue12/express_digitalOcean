@@ -19,3 +19,4 @@ const uploadFiles = async () => {
     window.location.href = "/api";
   }
 };
+console.log("hello");
