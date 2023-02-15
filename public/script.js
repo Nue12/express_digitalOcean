@@ -2,8 +2,11 @@ const API = localStorage.getItem("apiUrl");
 
 const imgParentTag = document.querySelector(".imgParent");
 
-const uploadFiles = async () => {
-  const fileForm = document.getElementById("fileForm");
+const fileForm = document.getElementById("fileForm");
+
+fileForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
   const formData = new FormData(fileForm);
   if (API) {
     const response = await fetch(`${API}/upload`, {
@@ -18,5 +21,6 @@ const uploadFiles = async () => {
   } else {
     window.location.href = "/api";
   }
-};
+});
+
 console.log("hello");
