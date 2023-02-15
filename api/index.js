@@ -60,7 +60,7 @@ app.get("/api", (req, res) => {
 
 app.post("/api/upload", function (req, res, next) {
   // formidable
-  const form = formidable();
+  const form = formidable({ multiples: true });
   form.parse(req, (err, fields, files) => {
     const file = files.upload;
     const fileStream = fs.createReadStream(file.filepath);
