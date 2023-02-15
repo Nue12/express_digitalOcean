@@ -17,11 +17,15 @@
       Please select a file and submit the form to upload an asset to your
       DigitalOcean Space.
     </p>
+    <div class="imgParent"></div>
 
-    <form method="post" enctype="multipart/form-data" action="/upload">
+    <form method="post" enctype="multipart/form-data" id="fileForm">
       <label for="file">Upload a file</label>
       <input type="file" name="upload" />
-      <input type="submit" class="button" />
+      <button type="button" class="button" onclick="uploadFiles()">
+        upload
+      </button>
     </form>
+    <script src="script.js"></script>
   </body>
 </html>

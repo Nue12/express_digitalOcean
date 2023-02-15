@@ -4,6 +4,7 @@ const multer = require("multer");
 const fs = require("fs");
 const multerS3 = require("multer-s3-v2");
 const formidable = require("formidable");
+const { v4: uuidv4 } = require("uuid");
 
 const spacesEndpoint = new aws.Endpoint("sgp1.digitaloceanspaces.com");
 const s3 = new aws.S3({
@@ -56,7 +57,7 @@ app.post("/upload", function (req, res, next) {
     s3.upload(
       {
         Bucket: "msquarefdc",
-        Key: destFileName,
+        Key: `pha/${uuidv4() + destFileName}`,
         ACL: "public-read",
         Body: fileStream,
       },
@@ -66,13 +67,8 @@ app.post("/upload", function (req, res, next) {
           return res.redirect("/error");
         } else if (data) {
           // console.log("File uploaded successfully.", data);
-          res.redirect("/success");
-        } else {
-          console.log("else");
-          res.write(
-            '{"status": 442, "message": "Yikes! Error saving your photo. Please try again."}'
-          );
-          return response.end();
+          console.log(data);
+          res.send({ fileData: data.Location });
         }
       }
     );
